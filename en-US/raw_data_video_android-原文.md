@@ -28,7 +28,7 @@ Refer to the following steps to implement the original video data feature in you
 
 The following figure shows the API call timing using raw video data:
 
-![](Https://web-cdn.Agora.io /docs-files /1577090428042)
+![](https://web-cdn.agora.io/docs-files/1577090428042)
 
 
 ### Sample code
