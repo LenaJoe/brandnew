@@ -1,39 +1,39 @@
 
 ---
-Title: original video data
-Description:
-Platform: Android
-UpdatedAt: Tue Apr 28 2020 04:48:08 GMT+0800 (CST)
+title: 原始视频数据
+description:
+platform: Android
+updatedAt: Tue Apr 28 2020 04:48:08 GMT+0800 (CST)
 ---
-# Raw video data
-## Functional description
+# 原始视频数据
+## 功能描述
 
-In the process of audio and video transmission, we can carry out pre-processing and post-processing on the collected audio and video data to obtain the desired playing effect.
+音视频传输过程中，我们可以对采集到的音视频数据进行前处理和后处理，获取想要的播放效果。
 
-For scenarios where you need to process your own audio and video data, Agora provides raw data functionality, allowing you to pre-process the data before sending it to the encoder, modifying the captured voice signal or video frame;
+对于有自行处理音视频数据需求的场景，Agora 提供原始数据功能，你可以在将数据发送给编码器前进行前处理，对捕捉到的语音信号或视频帧进行修改；也可以在将数据发送给解码器后进行后处理，对接收到的语音信号或视频帧进行修改。
 
-By providing `ivideoframeobserver` class, the original SDK realizes the function of collecting and modifying original video data.
+Native SDK 通过提供 `IVideoFrameObserver` 类，实现采集、修改原始视频数据功能。
 
-## Implementation method
+## 实现方法
 
-Before using the raw data feature, make sure you have completed the basic real-time audio and video features in the project, as detailed in [one-on-one calls ](../../cn/Interactive%20Broadcast/start_call_android.md)or [interactive live](../../cn/Interactive%20Broadcast/start_live_android.md).
+在使用原始数据功能前，请确保你已在项目中完成基本的实时音视频功能，详见[一对一通话](../../cn/Interactive%20Broadcast/start_call_android.md)或[互动直播](../../cn/Interactive%20Broadcast/start_live_android.md)。
 
-Refer to the following steps to implement the original video data feature in your project:
+参考如下步骤，在你的项目中实现原始视频数据功能：
 
-1. The `registervideoframeobserver `method is called to` register` the video observer before joining the channel, and an `ivideoframeobserver` class is implemented in the method.
-2. After successful registration, the SDK sends the captured raw video data via the `oncapturevideoframe`, onpreencodeoframe``, or `onrendervideoframe` callbacks as each video frame is captured.
-3. After the user gets the video data, the user processes the video data by himself according to the needs of the scene. And then the processed video data is sent to the SDK through the callback.
+1. 加入频道前调用 `registerVideoFrameObserver` 方法注册视频观测器，并在该方法中实现一个 `IVideoFrameObserver` 类。
+2. 成功注册后，SDK 会在捕捉到每个视频帧时通过 `onCaptureVideoFrame`、`onPreEncodeVideoFrame` 或 `onRenderVideoFrame` 回调发送获取到的原始视频数据。
+3. 用户拿到视频数据后，根据场景需要自行进行处理。 然后将处理过的视频数据再通过上述回调发送给 SDK。
 
-### API call timing
+### API 调用时序
 
-The following figure shows the API call timing using raw video data:
+下图展示使用原始视频数据的 API 调用时序：
 
 ![](https://web-cdn.agora.io/docs-files/1577090428042)
 
 
-### Sample code
+### 示例代码
 
-You can implement the original video data feature in your project by referring to the following example code snippet against the API timing diagram:
+你可以对照 API 时序图，参考下面的示例代码片段，在项目中实现原始视频数据功能：
 
 ```c++
 #include <jni.h>
@@ -54,13 +54,13 @@ public:
         int width = videoFrame.width;
         int height = videoFrame.height;
 
-        memset(videoFrame.uBuffer, 128, videoFrame.uStride * height / 2);
+                memset(videoFrame.uBuffer, 128, videoFrame.uStride * height / 2);
         memset(videoFrame.vBuffer, 128, videoFrame.vStride * height / 2);
 
-        return true;
+                return true;
     }
 
-    // 获取远端用户发送的视频帧
+        // 获取远端用户发送的视频帧
     virtual bool onRenderVideoFrame(unsigned int uid, VideoFrame& videoFrame) override
     {
         return true;
@@ -94,30 +94,31 @@ class IVideoFrameObserver
      public:
          virtual bool onCaptureVideoFrame(VideoFrame& videoFrame) = 0;
          virtual bool onRenderVideoFrame(unsigned int uid, VideoFrame& videoFrame) = 0;
-		 virtual bool onPreEncodeVideoFrame(VideoFrame& videoFrame) { return true; }
+		 	 virtual bool onPreEncodeVideoFrame(VideoFrame& videoFrame) { return true; }
 };
 ```
 
-At the same time, we provide an open source[ video encrypt](https://github.com/AgoraIO/Advanced-Video/tree/master/Android/sample-video-encrypt) sample project at GitHub. You can download it at, or refer to the code in the [`iagoramediaengine.h`](https://github.com/AgoraIO/Advanced-Video/blob/master/Android/sample-video-encrypt/src/main/cpp/include/agora/IAgoraMediaEngine.h) file.
+同时，我们在 GitHub 提供一个开源的 [Video encrypt](https://github.com/AgoraIO/Advanced-Video/tree/master/Android/sample-video-encrypt) 示例项目。 你可以前往下载，或参考 [`IAgoraMediaEngine.h`](https://github.com/AgoraIO/Advanced-Video/blob/master/Android/sample-video-encrypt/src/main/cpp/include/agora/IAgoraMediaEngine.h) 文件中的代码。
 
-### API reference
+### API 参考
 
-- [`Registervideoframeobserver`](https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/cpp/classagora_1_1media_1_1_i_media_engine.html#a5eee4dfd1fd46e4a865feba163f3c5de)
-- [`Oncapturevideoframe`](https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/cpp/classagora_1_1media_1_1_i_video_frame_observer.html#a915c673aec879dcc2b08246bb2fcf49a)
-- [`Onrendervideoframe`](https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/cpp/classagora_1_1media_1_1_i_video_frame_observer.html#a966ed2459b6887c52112af638bc27c14)
-- [`Onpreencodevideoframe`](https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/cpp/classagora_1_1media_1_1_i_video_frame_observer.html#a2be41cdde19fcc0f365d4eb14a963e1c)
+- [`registerVideoFrameObserver`](https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/cpp/classagora_1_1media_1_1_i_media_engine.html#a5eee4dfd1fd46e4a865feba163f3c5de)
+- [`onCaptureVideoFrame`](https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/cpp/classagora_1_1media_1_1_i_video_frame_observer.html#a915c673aec879dcc2b08246bb2fcf49a)
+- [`onRenderVideoFrame`](https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/cpp/classagora_1_1media_1_1_i_video_frame_observer.html#a966ed2459b6887c52112af638bc27c14)
+- [`onPreEncodeVideoFrame`](https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/cpp/classagora_1_1media_1_1_i_video_frame_observer.html#a2be41cdde19fcc0f365d4eb14a963e1c)
 
-## Development considerations
+## 开发注意事项
 
-The raw data interface used in this article is the C++ interface. If you're developing on Android, please refer to the following steps to register the video data Viewer using the SDK library's JNI and Plug-in Manager.
+本文中使用的原始数据接口为 C++ 接口。 如果你在 Android 平台开发，请参考如下步骤，使用 SDK 库的 JNI 和插件管理器注册视频数据观测器。
 
-1. Before joining a channel, create a shared library Project. The project must be prefixed with `libapm-`and suffixed with `so`, such as `libapm-encryption.So`.
-2. Upon successful creation, rtcengine automatically loads the `libapm-encryption.So` file as a statistics directory plug-in.
-3. After the SDK destroys the boot, call the `unloadagorartcengineplugin` interface, and rtcengine will automatically uninstall the statistics directory plug-in.
+1. 加入频道前，创建一个共享库工程。 该工程必须以 `libapm-` 为前缀，`so` 为后缀，如 `libapm-encryption.so`。
+2. 成功创建后，RtcEngine 会自动加载该 `libapm-encryption.so` 文件，作为统计目录插件。
+3. SDK 销毁引擎后，调用 `unloadAgoraRtcEnginePlugin` 接口，RtcEngine 会自动卸载统计目录插件。
 
 ```java
 static AgoraVideoFrameObserver s_videoFrameObserver;
 static agora::rtc::IRtcEngine* rtcEngine = NULL;
+
 
 
 #ifdef __cplusplus
@@ -158,6 +159,6 @@ JNIEXPORT void JNICALL Java_io_agora_propeller_preprocessing_VideoPreProcessing_
 #endif
 ```
 
-## Related documents
+## 相关文档
 
-If you also want to implement the original audio data feature in your project, refer to [the original audio data](../../cn/Interactive%20Broadcast/raw_data_audio_android.md).
+如果你还想在项目中实现原始音频数据功能，请参考[原始音频数据](../../cn/Interactive%20Broadcast/raw_data_audio_android.md)。
