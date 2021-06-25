@@ -16,7 +16,7 @@ By providing `ivideoframeobserver` class, the original SDK realizes the function
 
 ## Implementation method
 
-Before using the raw data feature, make sure you have completed the basic real-time audio and video features in your project, see [one-on-one ](call../../CN/interactive % 20voice /start_call_android or interactive )[](live../../CN/interactive % 20voice /start_Live_android )for details.
+Before using the raw data feature, make sure you have completed the basic real-time audio and video features in your project, see [one-on-one ](call../../CN/interactive%20voice /start_call_androidorinteractive)[](live../../CN/interactive % 20voice /start_Live_android )for details.
 
 Refer to the following steps to implement the original video data feature in your project:
 
